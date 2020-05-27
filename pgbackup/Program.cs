@@ -4,7 +4,7 @@ namespace pgbackup
 {
     class Program
     {
-        public static string DBname = null;
+        internal static string DBname = null;
         static void Main(string[] args)
         {
             if (args.Length == 1 && args[0] == "firstsetting")
@@ -34,25 +34,14 @@ namespace pgbackup
             }
             else if (args.Length == 1 && args[0] == "test")
             {
-                //xmlgen.Setparamfoxml();
-                //Console.WriteLine(Function.SendEmail);
-                //Console.WriteLine(Function.GetEmail);
-                //Console.WriteLine(Function.SendEmailPass);
-                ////try
-                ////{
-                ////    SendMessage(Function.GetEmail);
-                ////}
-                ////catch (Exception e)
-                ////{
-                ////    Console.WriteLine(e);
-                ////    Console.ReadLine();
-                ////}
+                xmlgen.Setparamfoxml();
+                Function.Sortbackup();
             }
         }
         /*
          * Отправка почты
          */
-        public static async void SendMessage()
+        internal static async void SendMessage()
         {
             Email emailService = new Email();
             await emailService.SendEmailAsync(Function.GetEmail, "Резервное копирование", Function.Message);

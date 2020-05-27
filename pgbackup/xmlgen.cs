@@ -9,27 +9,27 @@ namespace pgbackup
 {
     class xmlgen
     {
-        public static string monthD = null;
-        public static string storageDay = null;
-        public static string storageMega = null;
-        public static string storageDayLog = null;
-        public static string minSizeB = null;
-        public static string backupDirDay = null;
-        public static string backupDirMonth = null;
-        public static string backupMega = null;
-        public static string FullLog = null;
-        public static string ShortLog = null;
-        public static string LogReglament = null;
-        public static string DBnameMas = null;
+        internal static string monthD = null;
+        internal static string storageDay = null;
+        internal static string storageMega = null;
+        internal static string storageDayLog = null;
+        internal static string minSizeB = null;
+        internal static string backupDirDay = null;
+        internal static string backupDirMonth = null;
+        internal static string backupMega = null;
+        internal static string FullLog = null;
+        internal static string ShortLog = null;
+        internal static string LogReglament = null;
+        internal static string DBnameMas = null;
         //почта
-        public static string SendEmail = null;
-        public static string SendEmailPass = null;
-        public static string GetEmail = null;
-        public static string Key = null;
+        internal static string SendEmail = null;
+        internal static string SendEmailPass = null;
+        internal static string GetEmail = null;
+        internal static string Key = null;
         //
-        public static string p;
+        internal static string p;
         //при создании папки давать на неё права
-        public static void StartXmlgen()
+        internal static void StartXmlgen()
         {
             if (File.Exists(Function.param))
             {
@@ -41,7 +41,7 @@ namespace pgbackup
                 XmlGen();
             }
         }
-        public static void XmlGen()
+        internal static void XmlGen()
         {
             ConsoleKeyInfo key;
             var rule = @"[0-9]";
@@ -377,7 +377,7 @@ namespace pgbackup
             XmlParam.Save(Function.param);
             Check();
         }
-        public static void Check()
+        internal static void Check()
         {
             ConsoleKeyInfo key;
             var rule = @"[y,n]";
@@ -512,7 +512,7 @@ namespace pgbackup
             xDataBase.AppendChild(xDBnameMas);
             XmlParam.Save(Function.param);
         }
-        public static void Setparamfoxml()
+        internal static void Setparamfoxml()
         {
             if (File.Exists(Function.param))
             {

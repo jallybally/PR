@@ -8,40 +8,40 @@ namespace pgbackup
 {
     class Function
     {
-        public static string param = Directory.GetCurrentDirectory() + "/param.xml"; //ИЗМЕНИТЬ СЛЕШИ ПЕРЕД ПЕРЕНОСОМ В ЛИНЬ!!!
+        internal static string param = Directory.GetCurrentDirectory() + "/param.xml"; //ИЗМЕНИТЬ СЛЕШИ ПЕРЕД ПЕРЕНОСОМ В ЛИНЬ!!!
         //public static string param = Directory.GetCurrentDirectory() + "/param.xml";
-        public static string сurrentPath = Directory.GetCurrentDirectory();
-        public static string[] dayD1 = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15" };//число первого месячного бекапа
-        public static string[] dayD2 = { "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" };//число второго месячного бекапа
-        public static double monthD;//количество дней хранения месячных бекапов
-        public static double storageDay;//количество дней хранения бекапа
-        public static double storageMega;//количество хранимых копий в меге
-        public static double storageDayLog;//время хранения логов
-        public static int minSizeB;//минимальный размер бекапа в байтах
-        public static string backupDirDay;//путь к папке в которой лежат бекапы
-        public static string backupDirMonth;//путь к папке с месячными бекапами
-        public static string backupMega;//путь к папке для синхрона в мегу
-        public static string FullLog;//путь к папке с логами
-        public static string ShortLog; //путь к кратким логам
-        public static string LogReglament;//путь для лога регламентных
-        public static string[] DBnameMas;//cписок баз данных
-        public static string tempDB; //переменная для еденичных копий
-        public static string DBanmeT = null;
-        public static string DBname = null;
-        public static string output;
+        internal static string сurrentPath = Directory.GetCurrentDirectory();
+        internal static string[] dayD1 = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15" };//число первого месячного бекапа
+        internal static string[] dayD2 = { "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" };//число второго месячного бекапа
+        internal static double monthD;//количество дней хранения месячных бекапов
+        internal static double storageDay;//количество дней хранения бекапа
+        internal static double storageMega;//количество хранимых копий в меге
+        internal static double storageDayLog;//время хранения логов
+        internal static int minSizeB;//минимальный размер бекапа в байтах
+        internal static string backupDirDay;//путь к папке в которой лежат бекапы
+        internal static string backupDirMonth;//путь к папке с месячными бекапами
+        internal static string backupMega;//путь к папке для синхрона в мегу
+        internal static string FullLog;//путь к папке с логами
+        internal static string ShortLog; //путь к кратким логам
+        internal static string LogReglament;//путь для лога регламентных
+        internal static string[] DBnameMas;//cписок баз данных
+        internal static string tempDB; //переменная для еденичных копий
+        internal static string DBanmeT = null;
+        internal static string DBname = null;
+        internal static string output;
         //почта
-        public static string SendEmail = null;
-        public static string SendEmailPass = null;
-        public static string GetEmail = null;
-        public static string Key = null;
-        public static string Alertbool = null;
-        public static string Message = null;
+        internal static string SendEmail = null;
+        internal static string SendEmailPass = null;
+        internal static string GetEmail = null;
+        internal static string Key = null;
+        internal static string Alertbool = null;
+        internal static string Message = null;
         //
-        public static string time = DateTime.Now.ToString("yyyy:MM:dd");
+        internal static string time = DateTime.Now.ToString("yyyy:MM:dd");
         /*
          * Подключение к СУБД, выполнение запросов
          */
-        public static void GetDBName()//получаем список баз данных
+        internal static void GetDBName()//получаем список баз данных
         {
             List<String> dbname = new List<String>();
             string connString = String.Format(
@@ -75,7 +75,7 @@ namespace pgbackup
         /*
          * Запуск создания бекапов.
          */
-        public static string Backup()
+        internal static string Backup()
         {
             string LogDB = FullLog + DBname + "_" + DateTime.Now.ToString("yyyy:MM:dd") + "_" + DateTime.Now.ToString("HH:mm:ss") + ".log";
             string backupFile = backupDirDay + DBname + "_" + DateTime.Now.ToString("yyyy:MM:dd") + "_" + DateTime.Now.ToString("HH:mm:ss") + ".backup";
@@ -113,7 +113,7 @@ namespace pgbackup
         /*
          * Запуск регламентных заданий
          */
-        public static void Reglament()
+        internal static void Reglament()
         {
             string LogRegVACUMDB = LogReglament + DBname + "_" + DateTime.Now.ToString("yyyy:MM:dd") + "_" + DateTime.Now.ToString("HH:mm:ss") + "VACUMDB.log";
             string LogRegREINDEXDB = LogReglament + DBname + "_" + DateTime.Now.ToString("yyyy:MM:dd") + "_" + DateTime.Now.ToString("HH:mm:ss") + "REINDEXDB.log";
@@ -145,7 +145,7 @@ namespace pgbackup
         /*
          * Сортировка бекапов
          */
-        public static void Sortbackup()
+        internal static void Sortbackup()
         {
             string currDay = DateTime.Now.Day.ToString() + DateTime.Now.Month.ToString();
             bool d1 = false;
@@ -158,20 +158,50 @@ namespace pgbackup
                 {
                     fi.Delete();
                 }
-                if (DateTime.Now == creatTime)
-                {
-                    File.Copy(fi.FullName, backupMega + fi.Name);
-                }
+                //if (DateTime.Now == creatTime)
+                //{
+                //    File.Copy(fi.FullName, backupMega + fi.Name);
+                //}
             }
-            foreach (var fi in new DirectoryInfo(backupMega).EnumerateFiles("*.backup", SearchOption.AllDirectories))
+            foreach (var fi in new DirectoryInfo(backupDirDay).EnumerateFiles("*.backup", SearchOption.AllDirectories))
             {
-                string creatDay = fi.CreationTime.Day.ToString();//день создания файла дневного
-                DateTime creatTime = fi.CreationTime;//дата создания файла
-                if (DateTime.Now - creatTime > TimeSpan.FromDays(storageMega) || fi.Length < minSizeB) //если прошло больше 20 дней с момента создания
+                string creatTime = fi.CreationTime.Day.ToString() + fi.CreationTime.Month.ToString() + fi.CreationTime.Year.ToString();//день создания файла дневного
+                string DateTimeToDay = DateTime.Today.Day.ToString() + DateTime.Today.Month.ToString() + DateTime.Today.Year.ToString();
+                if (DateTimeToDay == creatTime)
                 {
-                    fi.Delete();
+                    if (!File.Exists(backupMega + fi.Name))
+                    {
+                        File.Copy(fi.FullName, backupMega + fi.Name);
+                    }                   
                 }
             }
+            //мега
+            int i = new DirectoryInfo(backupMega).GetFiles().Length;
+            if (i <= storageMega)
+            {
+                foreach (var fi in new DirectoryInfo(backupMega).EnumerateFiles("*.backup", SearchOption.AllDirectories))
+                {
+                    string creatDay = fi.CreationTime.Day.ToString();//день создания файла дневного
+                    DateTime creatTime = fi.CreationTime;//дата создания файла
+                    if (DateTime.Now - creatTime > TimeSpan.FromDays(storageMega) || fi.Length < minSizeB)
+                    {
+                        fi.Delete();
+                    }
+                }
+            }
+            else if (i > storageMega)
+            {
+                int y = 0;
+                foreach (var fi in new DirectoryInfo(backupMega).EnumerateFiles("*.backup"))
+                {
+                    if (y != i - 1)
+                    {
+                        fi.Delete();
+                        y++;
+                    }
+                }
+            }
+            //конец меги
             foreach (var fi in new DirectoryInfo(backupDirMonth).EnumerateFiles("*.backup", SearchOption.AllDirectories))
             {
                 string creatDay = fi.CreationTime.Day.ToString();//день создания файла дневного
@@ -281,7 +311,7 @@ namespace pgbackup
         /*
          * Синхронизация с мегой
          */
-        public static void CopyToMega()
+        internal static void CopyToMega()
         {
             if (Convert.ToString(storageMega) == "0")
             {
@@ -317,7 +347,7 @@ namespace pgbackup
         /*
          * Бекап руками
          */
-        public static void BackupDataBase()
+        internal static void BackupDataBase()
         {
             
             string backuppath;
@@ -370,7 +400,7 @@ namespace pgbackup
         /*
          * Регламентные руками
          */
-        public static void ReglamentOne()
+        internal static void ReglamentOne()
         {
             GetDBName();
             foreach (string db in Function.DBnameMas)
